@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BigFoot Offerings</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+      color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+      justify-items: center;
+    }
+    .logo-grid a img {
+      max-width: 150px;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+    .logo-grid a:hover img {
+      transform: scale(1.1);
+    }
+    .top-center {
+      grid-column: 1 / span 2;
+    }
+    .description {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+      text-align: center;
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-grid">
+    <div class="top-center">
+      <a href="#">
+        <img src="q-logo.png" alt="Q Logo" />
+        <div class="description">
+          The Curator of Requia — your cosmic guide and archival assistant, asking the questions nobody dares to.
+        </div>
+      </a>
+    </div>
+    <a href="https://requia.app">
+      <img src="requia-logo.png" alt="Requia Logo" />
+    </a>
+    <a href="https://sysynct.com">
+      <img src="sysynct-logo.png" alt="SySynct Logo" />
+    </a>
+  </div>
+</body>
+</html>
