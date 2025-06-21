@@ -36,7 +36,7 @@
       cursor: pointer;
       border-radius: 1em;
       position: absolute;
-      top: calc(50% + 100px);
+      top: calc(50% + 130px);
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
@@ -52,9 +52,9 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 95px);
+      top: calc(15% - 105px);
       left: 10%;
-      height: 15vw;
+      height: 17vw;
     }
     #sysynctBtn {
       top: calc(27% - 35px);
@@ -62,10 +62,10 @@
     }
     #qBtn {
       top: 40%;
-      left: calc(50% + 120px);
+      left: calc(50% + 140px);
       transform: translate(-50%, -50%);
-      width: 74.36vw;
-      height: 35.49vw;
+      width: calc(74.36vw * 1.3);
+      height: calc(35.49vw * 1.3);
     }
     .popup {
       position: absolute;
@@ -154,6 +154,8 @@
     video.addEventListener('ended', () => {
       startButton.textContent = 'Yes';
       startButton.style.display = 'block';
+      video.pause();
+      video.currentTime = 0;
       requiaBtn.style.display = 'none';
       sysynctBtn.style.display = 'none';
       qBtn.style.display = 'none';
