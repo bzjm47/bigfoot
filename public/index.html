@@ -3,130 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bigfoot Help</title>
+  <title>Bigfoot Tech Consulting</title>
   <style>
-    * {
+    html, body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
       height: 100%;
-      background: black;
       overflow: hidden;
-    }
-
-    #videoContainer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background: black;
     }
-
     video {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      max-height: 100vh;
+      object-fit: cover;
     }
-
-    #playOverlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: transparent;
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 10;
-      transition: opacity 0.5s ease;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2;
     }
-
-    #enterBtn {
-      font-size: 2rem;
-      font-weight: bold;
-      color: white;
-      background: transparent;
-      border: 3px solid white;
-      border-radius: 10px;
-      padding: 15px 25px;
-      text-align: center;
+    #startButton {
+      background: white;
+      border: none;
+      padding: 1em 2em;
+      font-size: 2em;
       cursor: pointer;
-      animation: pulse 2s infinite;
-      transition: all 0.3s ease;
+      border-radius: 1em;
     }
-
-    #enterBtn:hover {
-      background: white;
-      color: black;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    #offerings {
+    .invisible-button {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: white;
-      padding: 10px 15px;
-      border-radius: 8px;
+      z-index: 3;
+      width: 20vw;
+      height: 8vw;
+      background: transparent;
+      border: none;
+      cursor: pointer;
       display: none;
-      z-index: 11;
+    }
+    #requiaBtn {
+      top: 15%;
+      left: 10%;
+    }
+    #sysynctBtn {
+      top: 27%;
+      left: 10%;
+    }
+    .popup {
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 1em;
+      border-radius: 10px;
+      z-index: 4;
+      display: none;
+    }
+    .popup a {
+      color: #00ffff;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <div id="overlay">
+    <button id="startButton">Yes</button>
+  </div>
+  <video id="bgVideo" playsinline>
+    <source src="requia_loop.mp4" type="video/mp4" />
+    Your browser does not support HTML5 video.
+  </video>
 
-  <div id="videoContainer">
-    <video id="bgVideo" playsinline muted>
-      <source src="requia_loop.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+  <button id="requiaBtn" class="invisible-button"></button>
+  <button id="sysynctBtn" class="invisible-button"></button>
+
+  <div id="requiaPopup" class="popup">
+    <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
+    <h2>Requia</h2>
+    <p>Description of Requia</p>
+    <a href="https://requia.app" onclick="location.reload(); return false;">Visit requia.app</a>
   </div>
 
-  <div id="playOverlay">
-    <button id="enterBtn">Yes</button>
-  </div>
-
-  <div id="offerings">
-    Offerings
+  <div id="sysynctPopup" class="popup">
+    <div class="close" onclick="closePopup('sysynctPopup')">&times;</div>
+    <h2>SySynct</h2>
+    <p>Description of SySynct</p>
+    <a href="https://sysynct.com" onclick="location.reload(); return false;">Visit sysynct.com</a>
   </div>
 
   <script>
     const video = document.getElementById('bgVideo');
-    const overlay = document.getElementById('playOverlay');
-    const enterBtn = document.getElementById('enterBtn');
-    const offerings = document.getElementById('offerings');
+    const overlay = document.getElementById('overlay');
+    const startButton = document.getElementById('startButton');
+    const requiaBtn = document.getElementById('requiaBtn');
+    const sysynctBtn = document.getElementById('sysynctBtn');
 
-    enterBtn.addEventListener('click', async () => {
-      try {
-        video.muted = false;
-        await video.play();
-        overlay.style.display = 'none';
-        setTimeout(() => {
-          offerings.style.display = 'block';
-        }, 3000);
-      } catch (e) {
-        console.error('Video failed to play:', e);
-      }
+    startButton.addEventListener('click', () => {
+      video.play();
+      overlay.style.display = 'none';
+      setTimeout(() => {
+        requiaBtn.style.display = 'block';
+        sysynctBtn.style.display = 'block';
+      }, 5000);
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      video.load();
+    requiaBtn.addEventListener('click', () => {
+      document.getElementById('requiaPopup').style.display = 'block';
     });
+
+    sysynctBtn.addEventListener('click', () => {
+      document.getElementById('sysynctPopup').style.display = 'block';
+    });
+
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
   </script>
-
 </body>
 </html>
 
