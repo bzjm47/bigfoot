@@ -10,7 +10,7 @@
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background: black;
+      background: transparent;
     }
     body {
       display: flex;
@@ -26,7 +26,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none;
+      display: block;
     }
     #startButton {
       background: white;
@@ -45,15 +45,16 @@
       position: absolute;
       z-index: 3;
       width: 20vw;
-      height: 8vw;
+      height: 9vw;
       background: transparent;
       border: none;
       cursor: pointer;
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 45px);
+      top: calc(15% - 75px);
       left: 10%;
+      height: 13vw;
     }
     #sysynctBtn {
       top: calc(27% - 35px);
@@ -61,8 +62,10 @@
     }
     #qBtn {
       top: 40%;
-      left: calc(50% + 20px);
+      left: calc(50% + 80px);
       transform: translate(-50%, -50%);
+      width: 44vw;
+      height: 21vw;
     }
     .popup {
       position: absolute;
@@ -133,11 +136,13 @@
     const sysynctBtn = document.getElementById('sysynctBtn');
     const qBtn = document.getElementById('qBtn');
 
+    video.pause();
+    video.style.display = 'block';
     startButton.style.display = 'block';
 
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
-      video.style.display = 'block';
+      video.currentTime = 0;
       video.muted = false;
       video.play().then(() => {
         setTimeout(() => {
@@ -146,6 +151,14 @@
           qBtn.style.display = 'block';
         }, 5000);
       });
+    });
+
+    video.addEventListener('ended', () => {
+      startButton.textContent = 'Yes';
+      startButton.style.display = 'block';
+      requiaBtn.style.display = 'none';
+      sysynctBtn.style.display = 'none';
+      qBtn.style.display = 'none';
     });
 
     requiaBtn.addEventListener('click', () => {
