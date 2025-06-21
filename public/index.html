@@ -26,18 +26,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-    #overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 2;
+      display: none;
     }
     #startButton {
       background: white;
@@ -46,6 +35,11 @@
       font-size: 2em;
       cursor: pointer;
       border-radius: 1em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
     .invisible-button {
       position: absolute;
@@ -58,12 +52,17 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 15px);
+      top: calc(15% - 5px);
       left: 10%;
     }
     #sysynctBtn {
-      top: calc(27% - 15px);
+      top: calc(27% - 5px);
       left: 10%;
+    }
+    #qBtn {
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     .popup {
       position: absolute;
@@ -93,46 +92,59 @@
 </head>
 <body>
   <div id="container">
-    <div id="overlay">
-      <button id="startButton">Yes</button>
-    </div>
     <video id="bgVideo" playsinline>
       <source src="requia_loop.mp4" type="video/mp4" />
       Your browser does not support HTML5 video.
     </video>
 
+    <button id="startButton">Yes</button>
     <button id="requiaBtn" class="invisible-button"></button>
     <button id="sysynctBtn" class="invisible-button"></button>
+    <button id="qBtn" class="invisible-button"></button>
 
     <div id="requiaPopup" class="popup">
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
       <h2>Requia</h2>
-      <p>Description of Requia</p>
-      <a href="https://requia.app" onclick="location.reload(); return false;">Visit requia.app</a>
+      <p>Requia is your family’s private streaming portal—auto-organized memories, narrated timelines, and legacy storytelling built on your terms.</p>
+      <a href="https://www.requia.app" onclick="location.reload(); return false;">Visit requia.app</a>
     </div>
 
     <div id="sysynctPopup" class="popup">
       <div class="close" onclick="closePopup('sysynctPopup')">&times;</div>
       <h2>SySynct</h2>
-      <p>Description of SySynct</p>
-      <a href="https://sysynct.com" onclick="location.reload(); return false;">Visit sysynct.com</a>
+      <p>SySynct is your analog brain’s missing link—an automation engine that turns scribbles, voice notes, and old files into searchable, synced, AI-powered insights.</p>
+      <a href="https://www.sysynct.com" onclick="location.reload(); return false;">Visit sysynct.com</a>
+    </div>
+
+    <div id="qPopup" class="popup">
+      <div class="close" onclick="closePopup('qPopup')">&times;</div>
+      <h2>Welcome to Bigfoot Tech Consulting</h2>
+      <p>I’m Q, the missing link. I help connect your analog and digital footprint inside your own autonomous environment, free from the clouds of the giants.</p>
+      <p>With SySynct and Requia, we bridge real life and digital systems using invisible tools that feel like magic—on your terms, in your cloud.</p>
+      <p>I’m also the Curator of Requia. What’s a curator do? Well… I’m still working on my projects, but my goal is to help you remember everything that matters—automatically. Through SySynct, I turn your notes, videos, photos, and voice into a living archive, a private AI-powered library that understands your life and helps you tell its story.</p>
+      <p>But in the mean time, I can help with anything tech, contact me: (link to TBD email)</p>
     </div>
   </div>
 
   <script>
     const video = document.getElementById('bgVideo');
-    const overlay = document.getElementById('overlay');
     const startButton = document.getElementById('startButton');
     const requiaBtn = document.getElementById('requiaBtn');
     const sysynctBtn = document.getElementById('sysynctBtn');
+    const qBtn = document.getElementById('qBtn');
+
+    startButton.style.display = 'block';
 
     startButton.addEventListener('click', () => {
-      video.play();
-      overlay.style.display = 'none';
-      setTimeout(() => {
-        requiaBtn.style.display = 'block';
-        sysynctBtn.style.display = 'block';
-      }, 5000);
+      startButton.style.display = 'none';
+      video.style.display = 'block';
+      video.play().then(() => {
+        setTimeout(() => {
+          requiaBtn.style.display = 'block';
+          sysynctBtn.style.display = 'block';
+          qBtn.style.display = 'block';
+        }, 5000);
+      });
     });
 
     requiaBtn.addEventListener('click', () => {
@@ -143,12 +155,14 @@
       document.getElementById('sysynctPopup').style.display = 'block';
     });
 
+    qBtn.addEventListener('click', () => {
+      document.getElementById('qPopup').style.display = 'block';
+    });
+
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
   </script>
 </body>
 </html>
-
-
 
