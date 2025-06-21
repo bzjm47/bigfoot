@@ -3,60 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bigfoot Consulting</title>
+  <title>Bigfoot Tech Consulting</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
       height: 100%;
+      background: black;
       overflow: hidden;
+    }
+
+    #videoContainer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: black;
     }
 
-    .video-bg {
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 100vh;
+    }
+
+    #playOverlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100vw;
-      min-height: 100vh;
-      object-fit: cover;
-      z-index: -1;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      transition: opacity 0.5s ease;
     }
 
-    .overlay-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 1s ease;
-      pointer-events: none;
+    #enterBtn {
+      font-size: 5rem;
+      font-weight: bold;
+      color: white;
+      background: transparent;
+      border: 4px solid white;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
       text-align: center;
-    }
-
-    .overlay-content.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .offerings-button {
-      background-color: rgba(255, 255, 255, 0.85);
-      color: #000;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 6px;
-      text-decoration: none;
+      line-height: 88px;
       cursor: pointer;
-      font-family: sans-serif;
+      animation: pulse 2s infinite;
+      transition: all 0.3s ease;
     }
 
-    .offerings-button:hover {
-      background-color: #eee;
+    #enterBtn:hover {
+      background: white;
+      color: black;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
+
+  <div id="videoContainer">
+    <video id="bgVideo" playsinline muted>
+      <source src="requia_loop.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div id="playOverlay">
+    <button id="enterBtn">?</button>
+  </div>
+
+  <script>
+    const video = document.getElementById('bgVideo');
+    const overlay = document.getElementById('playOverlay');
+    const enterBtn = document.getElementById('enterBtn');
+
+    enterBtn.addEventListener('click', async () => {
+      try {
+        video.muted = false;
+        await video.play();
+        overlay.style.display = 'none';
+      } catch (e) {
+        console.error('Video failed to play:', e);
+      }
+    });
+
+    // Preload video so iOS doesn't block it entirely
+    document.addEventListener('DOMContentLoaded', () => {
+      video.load();
+    });
+  </script>
+
+</body>
+</html>
+
 
   <video id="bgVideo" class="video-bg" muted playsinline loop preload="auto">
     <source src="requia_loop.mp4" type="video/mp4" />
