@@ -26,7 +26,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
+      display: none;
     }
     #startButton {
       background: white;
@@ -52,16 +52,16 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 20px);
+      top: calc(15% - 45px);
       left: 10%;
     }
     #sysynctBtn {
-      top: calc(27% - 20px);
+      top: calc(27% - 35px);
       left: 10%;
     }
     #qBtn {
       top: 40%;
-      left: 50%;
+      left: calc(50% + 20px);
       transform: translate(-50%, -50%);
     }
     .popup {
@@ -92,7 +92,7 @@
 </head>
 <body>
   <div id="container">
-    <video id="bgVideo" preload="auto" poster="poster.jpg" playsinline muted>
+    <video id="bgVideo" preload="auto" poster="poster.jpg" playsinline>
       <source src="requia_loop.mp4" type="video/mp4" />
       Your browser does not support HTML5 video.
     </video>
@@ -106,14 +106,14 @@
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
       <h2>Requia</h2>
       <p>Requia is your family’s private streaming portal—auto-organized memories, narrated timelines, and legacy storytelling built on your terms.</p>
-      <a href="https://www.requia.app" target="_blank">Visit requia.app</a>
+      <a href="https://www.requia.app" target="_blank" rel="noopener noreferrer">Visit requia.app</a>
     </div>
 
     <div id="sysynctPopup" class="popup">
       <div class="close" onclick="closePopup('sysynctPopup')">&times;</div>
       <h2>SySynct</h2>
       <p>SySynct is your analog brain’s missing link—an automation engine that turns scribbles, voice notes, and old files into searchable, synced, AI-powered insights.</p>
-      <a href="https://www.sysynct.com" target="_blank">Visit sysynct.com</a>
+      <a href="https://www.sysynct.com" target="_blank" rel="noopener noreferrer">Visit sysynct.com</a>
     </div>
 
     <div id="qPopup" class="popup">
@@ -138,6 +138,7 @@
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
       video.style.display = 'block';
+      video.muted = false;
       video.play().then(() => {
         setTimeout(() => {
           requiaBtn.style.display = 'block';
@@ -165,5 +166,6 @@
   </script>
 </body>
 </html>
+
 
 
