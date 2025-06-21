@@ -26,7 +26,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none;
+      display: block;
     }
     #startButton {
       background: white;
@@ -52,11 +52,11 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 5px);
+      top: calc(15% - 20px);
       left: 10%;
     }
     #sysynctBtn {
-      top: calc(27% - 5px);
+      top: calc(27% - 20px);
       left: 10%;
     }
     #qBtn {
@@ -92,7 +92,7 @@
 </head>
 <body>
   <div id="container">
-    <video id="bgVideo" playsinline>
+    <video id="bgVideo" preload="auto" poster="poster.jpg" playsinline muted>
       <source src="requia_loop.mp4" type="video/mp4" />
       Your browser does not support HTML5 video.
     </video>
@@ -106,14 +106,14 @@
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
       <h2>Requia</h2>
       <p>Requia is your family’s private streaming portal—auto-organized memories, narrated timelines, and legacy storytelling built on your terms.</p>
-      <a href="https://www.requia.app" onclick="location.reload(); return false;">Visit requia.app</a>
+      <a href="https://www.requia.app" target="_blank">Visit requia.app</a>
     </div>
 
     <div id="sysynctPopup" class="popup">
       <div class="close" onclick="closePopup('sysynctPopup')">&times;</div>
       <h2>SySynct</h2>
       <p>SySynct is your analog brain’s missing link—an automation engine that turns scribbles, voice notes, and old files into searchable, synced, AI-powered insights.</p>
-      <a href="https://www.sysynct.com" onclick="location.reload(); return false;">Visit sysynct.com</a>
+      <a href="https://www.sysynct.com" target="_blank">Visit sysynct.com</a>
     </div>
 
     <div id="qPopup" class="popup">
@@ -122,7 +122,7 @@
       <p>I’m Q, the missing link. I help connect your analog and digital footprint inside your own autonomous environment, free from the clouds of the giants.</p>
       <p>With SySynct and Requia, we bridge real life and digital systems using invisible tools that feel like magic—on your terms, in your cloud.</p>
       <p>I’m also the Curator of Requia. What’s a curator do? Well… I’m still working on my projects, but my goal is to help you remember everything that matters—automatically. Through SySynct, I turn your notes, videos, photos, and voice into a living archive, a private AI-powered library that understands your life and helps you tell its story.</p>
-      <p>But in the mean time, I can help with anything tech, contact me: (link to TBD email)</p>
+      <p>But in the meantime, I can help with anything tech, contact me: (link to TBD email)</p>
     </div>
   </div>
 
@@ -165,4 +165,5 @@
   </script>
 </body>
 </html>
+
 
