@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bigfoot Tech Consulting</title>
+  <title>Bigfoot Help</title>
   <style>
     * {
       margin: 0;
@@ -41,7 +41,7 @@
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: transparent;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -50,16 +50,14 @@
     }
 
     #enterBtn {
-      font-size: 5rem;
+      font-size: 2rem;
       font-weight: bold;
       color: white;
       background: transparent;
-      border: 4px solid white;
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
+      border: 3px solid white;
+      border-radius: 10px;
+      padding: 15px 25px;
       text-align: center;
-      line-height: 88px;
       cursor: pointer;
       animation: pulse 2s infinite;
       transition: all 0.3s ease;
@@ -75,6 +73,17 @@
       50% { transform: scale(1.1); opacity: 0.7; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    #offerings {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      display: none;
+      z-index: 11;
+    }
   </style>
 </head>
 <body>
@@ -87,25 +96,32 @@
   </div>
 
   <div id="playOverlay">
-    <button id="enterBtn">?</button>
+    <button id="enterBtn">Yes</button>
+  </div>
+
+  <div id="offerings">
+    Offerings
   </div>
 
   <script>
     const video = document.getElementById('bgVideo');
     const overlay = document.getElementById('playOverlay');
     const enterBtn = document.getElementById('enterBtn');
+    const offerings = document.getElementById('offerings');
 
     enterBtn.addEventListener('click', async () => {
       try {
         video.muted = false;
         await video.play();
         overlay.style.display = 'none';
+        setTimeout(() => {
+          offerings.style.display = 'block';
+        }, 3000);
       } catch (e) {
         console.error('Video failed to play:', e);
       }
     });
 
-    // Preload video so iOS doesn't block it entirely
     document.addEventListener('DOMContentLoaded', () => {
       video.load();
     });
@@ -114,29 +130,3 @@
 </body>
 </html>
 
-
-  <video id="bgVideo" class="video-bg" muted playsinline loop preload="auto">
-    <source src="requia_loop.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  <div class="overlay-content" id="offeringsContainer">
-    <a class="offerings-button" href="offerings.html">Explore Offerings</a>
-  </div>
-
-  <script>
-    const video = document.getElementById("bgVideo");
-    const buttonContainer = document.getElementById("offeringsContainer");
-
-    document.body.addEventListener("click", () => {
-      video.muted = false;
-      video.play().then(() => {
-        buttonContainer.classList.add("visible");
-      }).catch(err => {
-        console.error("Video play failed:", err);
-      });
-    }, { once: true });
-  </script>
-
-</body>
-</html>
