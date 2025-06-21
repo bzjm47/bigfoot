@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REQUIA</title>
+  <title>Bigfoot Consulting</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
+      background: black;
     }
 
     .video-bg {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      min-width: 100vw;
+      min-height: 100vh;
       object-fit: cover;
       z-index: -1;
     }
@@ -25,34 +28,58 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 1s ease;
+      pointer-events: none;
       text-align: center;
-      color: white;
+    }
+
+    .overlay-content.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .offerings-button {
-      background: rgba(0,0,0,0.6);
-      border: 1px solid #fff;
-      padding: 1rem 2rem;
-      color: white;
+      background-color: rgba(255, 255, 255, 0.85);
+      color: #000;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 6px;
       text-decoration: none;
-      font-size: 1.2rem;
-      border-radius: 8px;
+      cursor: pointer;
+      font-family: sans-serif;
     }
+
     .offerings-button:hover {
-      background: rgba(255,255,255,0.1);
+      background-color: #eee;
     }
   </style>
 </head>
 <body>
 
-  <video autoplay muted loop class="video-bg">
+  <video id="bgVideo" class="video-bg" muted playsinline loop preload="auto">
     <source src="requia_loop.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
-  <div class="overlay-content">
+  <div class="overlay-content" id="offeringsContainer">
     <a class="offerings-button" href="offerings.html">Explore Offerings</a>
   </div>
+
+  <script>
+    const video = document.getElementById("bgVideo");
+    const buttonContainer = document.getElementById("offeringsContainer");
+
+    document.body.addEventListener("click", () => {
+      video.muted = false;
+      video.play().then(() => {
+        buttonContainer.classList.add("visible");
+      }).catch(err => {
+        console.error("Video play failed:", err);
+      });
+    }, { once: true });
+  </script>
 
 </body>
 </html>
