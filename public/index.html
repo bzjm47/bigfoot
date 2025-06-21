@@ -31,12 +31,12 @@
     #startButton {
       background: white;
       border: none;
-      padding: 1em 2em;
-      font-size: 2em;
+      padding: 0.75em 1.5em;
+      font-size: 1.25em;
       cursor: pointer;
       border-radius: 1em;
       position: absolute;
-      top: 50%;
+      top: calc(50% + 100px);
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
@@ -52,9 +52,9 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 75px);
+      top: calc(15% - 95px);
       left: 10%;
-      height: 13vw;
+      height: 15vw;
     }
     #sysynctBtn {
       top: calc(27% - 35px);
@@ -62,10 +62,10 @@
     }
     #qBtn {
       top: 40%;
-      left: calc(50% + 80px);
+      left: calc(50% + 120px);
       transform: translate(-50%, -50%);
-      width: 44vw;
-      height: 21vw;
+      width: 74.36vw;
+      height: 35.49vw;
     }
     .popup {
       position: absolute;
@@ -136,8 +136,6 @@
     const sysynctBtn = document.getElementById('sysynctBtn');
     const qBtn = document.getElementById('qBtn');
 
-    video.pause();
-    video.style.display = 'block';
     startButton.style.display = 'block';
 
     startButton.addEventListener('click', () => {
