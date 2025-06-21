@@ -3,32 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BigFoot</title>
+  <title>REQUIA</title>
   <style>
-    body {
+    body, html {
       margin: 0;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
     }
-    .logo-link {
-      display: block;
-      width: 100%;
-      max-width: 600px;
+
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: -1;
     }
-    .logo-link img {
-      width: 100%;
-      height: auto;
-      display: block;
-      cursor: pointer;
+
+    .overlay-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+    }
+
+    .offerings-button {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #fff;
+      padding: 1rem 2rem;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 8px;
+    }
+    .offerings-button:hover {
+      background: rgba(255,255,255,0.1);
     }
   </style>
 </head>
 <body>
-  <a class="logo-link" href="offerings.html">
-    <img src="bigfoot-logo.png" alt="BigFoot Logo" />
-  </a>
+
+  <video autoplay muted loop class="video-bg">
+    <source src="requia-loop.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="overlay-content">
+    <a class="offerings-button" href="offerings.html">Explore Offerings</a>
+  </div>
+
 </body>
 </html>
