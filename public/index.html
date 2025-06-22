@@ -32,11 +32,11 @@
       background: white;
       border: none;
       padding: 0.75em 1.5em;
-      font-size: 1.25em;
+      font-size: 1em;
       cursor: pointer;
       border-radius: 1em;
       position: absolute;
-      top: calc(50% + 190px);
+      top: calc(50% + 400px);
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
@@ -44,30 +44,29 @@
     .invisible-button {
       position: absolute;
       z-index: 3;
-      width: 20vw;
-      height: 9vw;
       background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-      border-radius: 12px;
+      border: none;
       cursor: pointer;
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 125px);
+      top: calc(15% - 165px);
       left: 10%;
-      height: 20vw;
+      width: 20vw;
+      height: 13vw;
     }
     #sysynctBtn {
       top: calc(27% - 35px);
       left: 10%;
+      width: 20vw;
+      height: 9vw;
     }
     #qBtn {
-      top: 70%;
-      left: calc(50% + 180px);
+      top: 75%;
+      left: calc(50% + 260px);
       transform: translate(-50%, -50%);
-      width: calc(74.36vw * 1.3);
-      height: calc(35.49vw * 1.3);
+      width: calc(74.36vw * 3);
+      height: calc(35.49vw * 3);
     }
     .popup {
       position: absolute;
@@ -93,14 +92,43 @@
       font-size: 1.5em;
       cursor: pointer;
     }
+    .glow-img {
+      position: absolute;
+      z-index: 2;
+      display: none;
+      pointer-events: none;
+    }
+    #requiaGlow {
+      top: calc(15% - 165px);
+      left: 10%;
+      width: 20vw;
+      height: 13vw;
+    }
+    #sysynctGlow {
+      top: calc(27% - 35px);
+      left: 10%;
+      width: 20vw;
+      height: 9vw;
+    }
+    #qGlow {
+      top: 75%;
+      left: calc(50% + 260px);
+      transform: translate(-50%, -50%);
+      width: calc(74.36vw * 3);
+      height: calc(35.49vw * 3);
+    }
   </style>
 </head>
 <body>
   <div id="container">
-    <video id="bgVideo" preload="auto" poster="poster.jpg" playsinline>
+    <video id="bgVideo" preload="auto" playsinline>
       <source src="requia_loop.mp4" type="video/mp4" />
       Your browser does not support HTML5 video.
     </video>
+
+    <img id="requiaGlow" class="glow-img" src="requia_idle.jpg" />
+    <img id="sysynctGlow" class="glow-img" src="sysynct_idle.jpg" />
+    <img id="qGlow" class="glow-img" src="q_idle.jpg" />
 
     <button id="startButton">Yes</button>
     <button id="requiaBtn" class="invisible-button"></button>
@@ -138,6 +166,10 @@
     const sysynctBtn = document.getElementById('sysynctBtn');
     const qBtn = document.getElementById('qBtn');
 
+    const requiaGlow = document.getElementById('requiaGlow');
+    const sysynctGlow = document.getElementById('sysynctGlow');
+    const qGlow = document.getElementById('qGlow');
+
     startButton.style.display = 'block';
 
     startButton.addEventListener('click', () => {
@@ -149,6 +181,10 @@
           requiaBtn.style.display = 'block';
           sysynctBtn.style.display = 'block';
           qBtn.style.display = 'block';
+
+          requiaGlow.style.display = 'block';
+          sysynctGlow.style.display = 'block';
+          qGlow.style.display = 'block';
         }, 5000);
       });
     });
@@ -158,9 +194,14 @@
       startButton.style.display = 'block';
       video.pause();
       video.currentTime = 0;
+
       requiaBtn.style.display = 'none';
       sysynctBtn.style.display = 'none';
       qBtn.style.display = 'none';
+
+      requiaGlow.style.display = 'none';
+      sysynctGlow.style.display = 'none';
+      qGlow.style.display = 'none';
     });
 
     requiaBtn.addEventListener('click', () => {
@@ -178,6 +219,28 @@
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
+
+    // Hover image swap logic
+    requiaBtn.addEventListener('mouseenter', () => {
+      requiaGlow.src = 'requia_hover.jpg';
+    });
+    requiaBtn.addEventListener('mouseleave', () => {
+      requiaGlow.src = 'requia_idle.jpg';
+    });
+
+    sysynctBtn.addEventListener('mouseenter', () => {
+      sysynctGlow.src = 'sysynct_hover.jpg';
+    });
+    sysynctBtn.addEventListener('mouseleave', () => {
+      sysynctGlow.src = 'sysynct_idle.jpg';
+    });
+
+    qBtn.addEventListener('mouseenter', () => {
+      qGlow.src = 'q_hover.jpg';
+    });
+    qBtn.addEventListener('mouseleave', () => {
+      qGlow.src = 'q_idle.jpg';
+    });
   </script>
 </body>
 </html>
