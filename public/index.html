@@ -23,12 +23,15 @@
       max-height: 100vh;
       max-width: 100vw;
       margin: auto;
+      transform-origin: top left;
+      transform: scale(var(--scale, 1));
     }
     video {
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
+      background-color: black;
     }
     #startButton {
       background: white;
@@ -38,7 +41,7 @@
       cursor: pointer;
       border-radius: 1em;
       position: absolute;
-      top: calc(50% + 400px);
+      top: calc(50% + 430px);
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
@@ -52,10 +55,10 @@
       display: none;
     }
     #requiaBtn {
-      top: calc(15% - 165px);
+      top: calc(15% - 175px);
       left: 10%;
       width: 20vw;
-      height: 13vw;
+      height: 14vw;
     }
     #sysynctBtn {
       top: calc(27% - 35px);
@@ -65,10 +68,10 @@
     }
     #qBtn {
       top: 75%;
-      left: calc(50% + 260px);
+      left: calc(50% + 280px);
       transform: translate(-50%, -50%);
-      width: 190px;
-      height: 94px;
+      width: 220px;
+      height: 110px;
     }
     .popup {
       position: absolute;
@@ -101,10 +104,10 @@
       pointer-events: none;
     }
     #requiaGlow {
-      top: calc(15% - 165px);
+      top: calc(15% - 175px);
       left: 10%;
       width: 20vw;
-      height: 13vw;
+      height: 14vw;
     }
     #sysynctGlow {
       top: calc(27% - 35px);
@@ -114,16 +117,25 @@
     }
     #qGlow {
       top: 75%;
-      left: calc(50% + 260px);
+      left: calc(50% + 280px);
       transform: translate(-50%, -50%);
-      width: 190px;
-      height: 94px;
+      width: 220px;
+      height: 110px;
+    }
+    #pauseTrigger {
+      position: absolute;
+      top: 18%;
+      left: 74%;
+      width: 7%;
+      height: 14%;
+      cursor: pointer;
+      z-index: 4;
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <video id="bgVideo" preload="auto" playsinline muted>
+    <video id="bgVideo" preload="auto" playsinline muted poster="frame.jpg">
       <source src="requia_loop.mp4" type="video/mp4" />
       Your browser does not support HTML5 video.
     </video>
@@ -136,6 +148,7 @@
     <button id="requiaBtn" class="invisible-button"></button>
     <button id="sysynctBtn" class="invisible-button"></button>
     <button id="qBtn" class="invisible-button"></button>
+    <div id="pauseTrigger" onclick="document.getElementById('bgVideo').pause();"></div>
 
     <div id="requiaPopup" class="popup">
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
@@ -174,6 +187,18 @@
 
     startButton.style.display = 'block';
 
+    function scaleContainer() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const targetWidth = 720;
+      const targetHeight = 1280;
+      const scale = Math.min(vw / targetWidth, vh / targetHeight);
+      document.getElementById('container').style.setProperty('--scale', scale);
+    }
+
+    window.addEventListener('resize', scaleContainer);
+    window.addEventListener('load', scaleContainer);
+
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
       video.currentTime = 0;
@@ -188,6 +213,14 @@
           sysynctGlow.style.display = 'block';
           qGlow.style.display = 'block';
         }, 5000);
+      });
+
+      video.addEventListener('timeupdate', () => {
+        if (video.currentTime >= 319) {
+          requiaGlow.style.display = 'none';
+          sysynctGlow.style.display = 'none';
+          qGlow.style.display = 'none';
+        }
       });
     });
 
@@ -222,7 +255,6 @@
       document.getElementById(id).style.display = 'none';
     }
 
-    // Hover image swap logic
     requiaBtn.addEventListener('mouseenter', () => {
       requiaGlow.src = 'requia_hover.jpg';
     });
