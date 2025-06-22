@@ -150,5 +150,89 @@
     <button id="qBtn" class="invisible-button"></button>
     <div id="pauseTrigger" onclick="document.getElementById('bgVideo').pause();"></div>
   </div>
+  <script>
+    const video = document.getElementById('bgVideo');
+    const startButton = document.getElementById('startButton');
+    const requiaBtn = document.getElementById('requiaBtn');
+    const sysynctBtn = document.getElementById('sysynctBtn');
+    const qBtn = document.getElementById('qBtn');
+
+    const requiaGlow = document.getElementById('requiaGlow');
+    const sysynctGlow = document.getElementById('sysynctGlow');
+    const qGlow = document.getElementById('qGlow');
+
+    function scaleContainer() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const targetWidth = 720;
+      const targetHeight = 1280;
+      const scale = Math.min(vw / targetWidth, vh / targetHeight);
+      document.getElementById('container').style.setProperty('--scale', scale);
+    }
+
+    window.addEventListener('resize', scaleContainer);
+    window.addEventListener('load', scaleContainer);
+
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().then(() => {
+        setTimeout(() => {
+          requiaBtn.style.display = 'block';
+          sysynctBtn.style.display = 'block';
+          qBtn.style.display = 'block';
+
+          requiaGlow.style.display = 'block';
+          sysynctGlow.style.display = 'block';
+          qGlow.style.display = 'block';
+        }, 5000);
+      });
+
+      video.addEventListener('timeupdate', () => {
+        if (video.currentTime >= 319) {
+          requiaGlow.style.display = 'none';
+          sysynctGlow.style.display = 'none';
+          qGlow.style.display = 'none';
+        }
+      });
+    });
+
+    video.addEventListener('ended', () => {
+      startButton.textContent = 'Yes';
+      startButton.style.display = 'block';
+      video.pause();
+      video.currentTime = 0;
+
+      requiaBtn.style.display = 'none';
+      sysynctBtn.style.display = 'none';
+      qBtn.style.display = 'none';
+
+      requiaGlow.style.display = 'none';
+      sysynctGlow.style.display = 'none';
+      qGlow.style.display = 'none';
+    });
+
+    requiaBtn.addEventListener('mouseenter', () => {
+      requiaGlow.src = 'requia_hover.jpg';
+    });
+    requiaBtn.addEventListener('mouseleave', () => {
+      requiaGlow.src = 'requia_idle.jpg';
+    });
+
+    sysynctBtn.addEventListener('mouseenter', () => {
+      sysynctGlow.src = 'sysynct_hover.jpg';
+    });
+    sysynctBtn.addEventListener('mouseleave', () => {
+      sysynctGlow.src = 'sysynct_idle.jpg';
+    });
+
+    qBtn.addEventListener('mouseenter', () => {
+      qGlow.src = 'q_hover.jpg';
+    });
+    qBtn.addEventListener('mouseleave', () => {
+      qGlow.src = 'q_idle.jpg';
+    });
+  </script>
 </body>
 </html>
