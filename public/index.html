@@ -62,44 +62,63 @@
     }
 
     /* Buttons above the images for clicks; glows are visual only */
-    .invisible-button{ z-index: 3; cursor: pointer; pointer-events: auto; }
-    .glow-img{ z-index: 2; pointer-events: none; width: 100%; height: 100%; object-fit: contain; }
+    .invisible-button,
+.glow-img {
+  position: absolute;
+  background: transparent;
+  border: none;
+  display: none;
+}
 
-    /* REQUIA sign — rack upper-left */
-    /* box roughly over the angled sign; adjust a few px if you want tighter */
-    #requiaBtn, #requiaGlow{
-      left: 34px;   /* X */
-      top: 104px;   /* Y */
-      width: 210px;
-      height: 120px;
-    }
+/* click targets above glows */
+.invisible-button { z-index: 3; cursor: pointer; pointer-events: auto; }
 
-    /* SYSYNCT sign — rack mid-left */
-    #sysynctBtn, #sysynctGlow{
-      left: 36px;
-      top: 258px;
-      width: 235px;
-      height: 92px;
-    }
+/* glows stay under, preserve ratio */
+.glow-img {
+  z-index: 2;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-    /* Q mug/sparkle area — near the purple particles & mug */
-    #qBtn, #qGlow{
-      left: 170px;
-      top: 760px;
-      width: 140px;
-      height: 150px;
-    }
+/* --- stage-based boxes (720×1280 coordinate system) --- */
 
-    /* Optional pause zone (kept stage-relative) */
-    #pauseTrigger{
-      position: absolute;
-      left: 532px;
-      top: 220px;
-      width: 52px;
-      height: 170px;
-      cursor: pointer;
-      z-index: 4;
-    }
+/* REQUIA sign */
+#requiaBtn, #requiaGlow {
+  left: 34px;
+  top: 104px;
+  width: 210px;
+  height: 120px;
+}
+
+/* SYSYNCT sign */
+#sysynctBtn, #sysynctGlow {
+  left: 36px;
+  top: 258px;
+  width: 235px;
+  height: 92px;
+}
+
+/* Q mug area */
+#qBtn, #qGlow {
+  left: 170px;
+  top: 760px;
+  width: 140px;
+  height: 150px;
+}
+
+/* pause zone */
+#pauseTrigger {
+  position: absolute;
+  left: 532px;
+  top: 220px;
+  width: 52px;
+  height: 170px;
+  cursor: pointer;
+  z-index: 4;
+}
+
 
     /* Popups unchanged */
     .popup {
