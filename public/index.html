@@ -18,7 +18,7 @@
       align-items: center;
     }
 
-    /* Fixed 720×1280 stage; we scale it uniformly to fit */
+    /* Fixed 720×1280 stage; we scale the whole thing uniformly */
     #container {
       position: relative;
       width: 720px;
@@ -50,69 +50,83 @@
       z-index: 2;
     }
 
-    /* ---------- OVERLAYS (buttons + glow JPGs) ---------- */
+    /* ===== OVERLAYS (buttons + JPG glows) =====
+       Use STAGE coordinates (px) so they scale with the art.
+       These px values are tuned for the 720×1280 master. */
     .invisible-button,
-    .glow-img {
+    .glow-img{
       position: absolute;
       background: transparent;
-      border: none;
+      border: 0;
       display: none;          /* JS toggles to block */
     }
 
-    /* click targets sit above glows */
-    .invisible-button {
-      z-index: 3;
-      cursor: pointer;
-      pointer-events: auto;
-    }
+    /* Buttons above the images for clicks; glows are visual only */
+/* ---------- FIX: overlays anchored to 720×1280 stage, no stretching ---------- */
 
-    /* glows sit under buttons and keep aspect ratio */
-    .glow-img {
-      z-index: 2;
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;    /* no stretching */
-    }
+/* shared */
+.invisible-button,
+.glow-img {
+  position: absolute;
+  background: transparent;
+  border: 0;
+  display: none;            /* JS turns these on */
+}
 
-    /* ===== Stage-based coordinates (px) for 720×1280 master ===== */
+/* click targets above visuals */
+.invisible-button {
+  z-index: 3;
+  cursor: pointer;
+  pointer-events: auto;
+}
 
-    /* REQUIA sign — rack upper-left */
-    #requiaBtn, #requiaGlow {
-      left: 34px;
-      top: 104px;
-      width: 210px;
-      height: 120px;
-    }
+/* glow JPGs under buttons, keep aspect ratio */
+.glow-img {
+  z-index: 2;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;      /* prevents warping */
+}
 
-    /* SYSYNCT sign — rack mid-left */
-    #sysynctBtn, #sysynctGlow {
-      left: 36px;
-      top: 258px;
-      width: 235px;
-      height: 92px;
-    }
+/* ===== exact stage coordinates for your 720×1280 master ===== */
+/* REQUIA sign */
+#requiaBtn, #requiaGlow {
+  left: 34px;
+  top: 104px;
+  width: 210px;
+  height: 120px;
+}
 
-    /* Q mug / sparkle area */
-    #qBtn, #qGlow {
-      left: 170px;
-      top: 760px;
-      width: 140px;
-      height: 150px;
-    }
+/* SYSYNCT sign */
+#sysynctBtn, #sysynctGlow {
+  left: 36px;
+  top: 258px;
+  width: 235px;
+  height: 92px;
+}
 
-    /* Optional pause zone (kept stage-relative) */
-    #pauseTrigger {
-      position: absolute;
-      left: 532px;
-      top: 220px;
-      width: 52px;
-      height: 170px;
-      cursor: pointer;
-      z-index: 4;
-    }
+/* Q mug / sparkle */
+#qBtn, #qGlow {
+  left: 170px;
+  top: 760px;
+  width: 140px;
+  height: 150px;
+}
 
-    /* Popups (unchanged) */
+/* Pause touch area (optional) */
+#pauseTrigger {
+  position: absolute;
+  left: 532px;
+  top: 220px;
+  width: 52px;
+  height: 170px;
+  cursor: pointer;
+  z-index: 4;
+}
+
+
+    /* Popups unchanged */
     .popup {
       position: absolute;
       top: 10%;
@@ -160,7 +174,7 @@
 
     <div id="pauseTrigger" aria-hidden="true" onclick="document.getElementById('bgVideo').pause();"></div>
 
-    <!-- Popups -->
+    <!-- Popups (unchanged) -->
     <div id="requiaPopup" class="popup">
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
       <h2>Requia</h2>
@@ -171,4 +185,89 @@
     <div id="sysynctPopup" class="popup">
       <div class="close" onclick="closePopup('sysynctPopup')">&times;</div>
       <h2>SySynct</h2>
-      <p>SySynct is your a
+      <p>SySynct is your analog brain’s missing link—an automation engine that turns scribbles, voice notes, and old files into searchable, synced, AI-powered insights.</p>
+      <a href="https://www.sysynct.com" target="_blank" rel="noopener noreferrer">Visit sysynct.com</a>
+    </div>
+
+    <div id="qPopup" class="popup">
+      <div class="close" onclick="closePopup('qPopup')">&times;</div>
+      <h2>Welcome to Bigfoot Tech Consulting</h2>
+      <p>I’m Q, the missing link. I help connect your analog and digital footprint inside your own autonomous environment, free from the clouds of the giants.</p>
+      <p>With SySynct and Requia, we bridge real life and digital systems using invisible tools that feel like magic—on your terms, in your cloud.</p>
+      <p>I’m also the Curator of Requia. What’s a curator do? Well… I’m still working on my projects, but my goal is to help you remember everything that matters—automatically. Through SySynct, I turn your notes, videos, photos, and voice into a living archive, a private AI-powered library that understands your life and helps you tell its story.</p>
+      <p>But in the meantime, I can help with anything tech, contact me: (link to TBD email)</p>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById('bgVideo');
+    const startButton = document.getElementById('startButton');
+    const requiaBtn = document.getElementById('requiaBtn');
+    const sysynctBtn = document.getElementById('sysynctBtn');
+    const qBtn = document.getElementById('qBtn');
+
+    const requiaGlow = document.getElementById('requiaGlow');
+    const sysynctGlow = document.getElementById('sysynctGlow');
+    const qGlow = document.getElementById('qGlow');
+
+    function scaleContainer() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const targetWidth = 720;
+      const targetHeight = 1280;
+      const scale = Math.min(vw / targetWidth, vh / targetHeight);
+      document.getElementById('container').style.setProperty('--scale', scale);
+    }
+
+    window.addEventListener('resize', scaleContainer);
+    window.addEventListener('load', () => {
+      scaleContainer();
+      video.load(); // force poster frame
+      video.pause();
+    });
+
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().then(() => {
+        setTimeout(() => {
+          // show buttons + glows
+          [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'block');
+          [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'block');
+        }, 5000);
+      });
+
+      video.addEventListener('timeupdate', () => {
+        if (video.currentTime >= 319) {
+          [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'none');
+        }
+      });
+    });
+
+    video.addEventListener('ended', () => {
+      startButton.textContent = 'Yes';
+      startButton.style.display = 'block';
+      video.pause();
+      video.currentTime = 0;
+
+      [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'none');
+      [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'none');
+    });
+
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    // simple hover swap logic (unchanged)
+    requiaBtn.addEventListener('mouseenter', () => { requiaGlow.src = 'requia_hover.jpg'; });
+    requiaBtn.addEventListener('mouseleave', () => { requiaGlow.src = 'requia_idle.jpg'; });
+
+    sysynctBtn.addEventListener('mouseenter', () => { sysynctGlow.src = 'sysynct_hover.jpg'; });
+    sysynctBtn.addEventListener('mouseleave', () => { sysynctGlow.src = 'sysynct_idle.jpg'; });
+
+    qBtn.addEventListener('mouseenter', () => { qGlow.src = 'q_hover.jpg'; });
+    qBtn.addEventListener('mouseleave', () => { qGlow.src = 'q_idle.jpg'; });
+  </script>
+</body>
+</html>
