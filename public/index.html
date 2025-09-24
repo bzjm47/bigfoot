@@ -116,77 +116,98 @@
   </div>
 
   <script>
-    const container = document.getElementById('container');
-    const video = document.getElementById('bgVideo');
-    const startButton = document.getElementById('startButton');
+  const container = document.getElementById('container');
+  const video = document.getElementById('bgVideo');
+  const startButton = document.getElementById('startButton');
 
-    const requiaBtn = document.getElementById('requiaBtn');
-    const sysynctBtn = document.getElementById('sysynctBtn');
-    const qBtn = document.getElementById('qBtn');
+  const requiaBtn = document.getElementById('requiaBtn');
+  const sysynctBtn = document.getElementById('sysynctBtn');
+  const qBtn = document.getElementById('qBtn');
 
-    const requiaGlow = document.getElementById('requiaGlow');
-    const sysynctGlow = document.getElementById('sysynctGlow');
-    const qGlow = document.getElementById('qGlow');
+  const requiaGlow = document.getElementById('requiaGlow');
+  const sysynctGlow = document.getElementById('sysynctGlow');
+  const qGlow = document.getElementById('qGlow');
 
-    /* Uniform stage scale */
-    function scaleContainer(){
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const scale = Math.min(vw/720, vh/1280);
-      container.style.setProperty('--scale', scale);
-    }
-    window.addEventListener('resize', scaleContainer);
-    window.addEventListener('load', () => {
-      scaleContainer();
-      video.load();  // show poster
-      video.pause();
+  // --- stage scale (unchanged)
+  function scaleContainer(){
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const scale = Math.min(vw/720, vh/1280);
+    container.style.setProperty('--scale', scale);
+  }
+  window.addEventListener('resize', scaleContainer);
+  window.addEventListener('load', () => { scaleContainer(); video.load(); video.pause(); });
+
+  // --- fade helpers (unchanged)
+  function showOverlays(){
+    [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
+      .forEach(el => el.classList.add('show'));
+    overlaysVisible = true;
+  }
+  function hideOverlays(){
+    [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
+      .forEach(el => el.classList.remove('show'));
+    overlaysVisible = false;
+  }
+
+  // --- NEW: make overlays pause-aware
+  let overlaysVisible = false;
+  let overlayTimer = null;
+  const OVERLAY_SHOW_MS = 5500;
+  const OVERLAY_HIDE_S = 319;
+
+  startButton.addEventListener('click', () => {
+    startButton.style.display = 'none';
+    video.currentTime = 0;
+    video.muted = false;
+
+    video.play().then(() => {
+      // schedule initial show
+      overlayTimer = setTimeout(() => {
+        // if user already paused before timer fires, just show immediately
+        showOverlays();
+      }, OVERLAY_SHOW_MS);
     });
 
-    /* Class-based show/hide for reliable fades */
-    function showOverlays(){
-      [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
-        .forEach(el => el.classList.add('show'));
-    }
-    function hideOverlays(){
-      [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
-        .forEach(el => el.classList.remove('show'));
-    }
-
-    startButton.addEventListener('click', () => {
-      startButton.style.display = 'none';
-      video.currentTime = 0;
-      video.muted = false;
-
-      video.play().then(() => {
-        /* show overlays after N ms — tweak this number to taste */
-        setTimeout(showOverlays, 5500);
-      });
-
-      video.addEventListener('timeupdate', () => {
-        /* hide overlays near the end if desired */
-        if (video.currentTime >= 319) hideOverlays();
-      });
+    video.addEventListener('timeupdate', () => {
+      // don't hide while paused; only hide once we pass the cutoff during playback
+      if (!video.paused && video.currentTime >= OVERLAY_HIDE_S && overlaysVisible) {
+        hideOverlays();
+      }
     });
+  });
 
-    video.addEventListener('ended', () => {
-      startButton.textContent = 'Yes';
-      startButton.style.display = 'block';
-      video.pause(); video.currentTime = 0;
-      hideOverlays();
-    });
+  // If user hits keyboard pause before overlays are visible, show them so the scene "freezes" together.
+  video.addEventListener('pause', () => {
+    if (overlayTimer) { clearTimeout(overlayTimer); overlayTimer = null; }
+    if (!overlaysVisible) showOverlays();
+  });
 
-    /* Popups */
-    function closePopup(id){ document.getElementById(id).style.display='none'; }
-    requiaBtn.addEventListener('click', () => { document.getElementById('requiaPopup').style.display='block'; });
-    sysynctBtn.addEventListener('click', () => { document.getElementById('sysynctPopup').style.display='block'; });
-    qBtn.addEventListener('click', () => { document.getElementById('qPopup').style.display='block'; });
+  // Resuming playback doesn't change overlay state; timeupdate will hide them at the cutoff.
+  video.addEventListener('play', () => {
+    // no-op
+  });
 
-    /* Hover glow swaps */
-    requiaBtn.addEventListener('mouseenter', () => { requiaGlow.src='requia_hover.jpg'; });
-    requiaBtn.addEventListener('mouseleave', () => { requiaGlow.src='requia_idle.jpg'; });
-    sysynctBtn.addEventListener('mouseenter', () => { sysynctGlow.src='sysynct_hover.jpg'; });
-    sysynctBtn.addEventListener('mouseleave', () => { sysynctGlow.src='sysynct_idle.jpg'; });
-    qBtn.addEventListener('mouseenter', () => { qGlow.src='q_hover.jpg'; });
-    qBtn.addEventListener('mouseleave', () => { qGlow.src='q_idle.jpg'; });
-  </script>
+  video.addEventListener('ended', () => {
+    startButton.textContent = 'Yes';
+    startButton.style.display = 'block';
+    video.pause(); video.currentTime = 0;
+    hideOverlays();
+  });
+
+  // Popups (unchanged)
+  function closePopup(id){ document.getElementById(id).style.display='none'; }
+  requiaBtn.addEventListener('click', () => { document.getElementById('requiaPopup').style.display='block'; });
+  sysynctBtn.addEventListener('click', () => { document.getElementById('sysynctPopup').style.display='block'; });
+  qBtn.addEventListener('click', () => { document.getElementById('qPopup').style.display='block'; });
+
+  // Hover glow swaps (unchanged)
+  requiaBtn.addEventListener('mouseenter', () => { requiaGlow.src='requia_hover.jpg'; });
+  requiaBtn.addEventListener('mouseleave', () => { requiaGlow.src='requia_idle.jpg'; });
+  sysynctBtn.addEventListener('mouseenter', () => { sysynctGlow.src='sysynct_hover.jpg'; });
+  sysynctBtn.addEventListener('mouseleave', () => { sysynctGlow.src='sysynct_idle.jpg'; });
+  qBtn.addEventListener('mouseenter', () => { qGlow.src='q_hover.jpg'; });
+  qBtn.addEventListener('mouseleave', () => { qGlow.src='q_idle.jpg'; });
+</script>
+
 </body>
 </html>
