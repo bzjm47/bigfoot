@@ -5,164 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Bigfoot Tech Consulting</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: black;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    /* --- Base layout --- */
+    html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#000; }
+    body { display:flex; justify-content:center; align-items:center; }
 
-    /* Fixed 720×1280 stage; we scale the whole thing uniformly */
-    #container {
-      position: relative;
-      width: 720px;
-      height: 1280px;
-      margin: auto;
+    /* Fixed 720×1280 portrait stage; we scale it uniformly to fit viewport */
+    #container{
+      position:relative;
+      width:720px; height:1280px;
+      margin:auto;
       transform-origin: top left;
-      transform: scale(var(--scale, 1));
+      transform: scale(var(--scale,1));
     }
 
-    video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 720px;
-      height: 1280px;
+    video{
+      position:absolute; inset:0;
+      width:720px; height:1280px;
     }
 
-    #startButton {
-      background: white;
-      border: none;
-      padding: 0.75em 1.5em;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 1em;
-      position: absolute;
-      top: calc(50% + 430px);
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+    #startButton{
+      background:#fff; border:0; padding:.75em 1.5em; font-size:1em; cursor:pointer; border-radius:1em;
+      position:absolute; left:50%; top:calc(50% + 430px); transform:translate(-50%,-50%);
+      z-index:2;
     }
 
-    /* ===== OVERLAYS (buttons + JPG glows) =====
-       Use STAGE coordinates (px) so they scale with the art.
-       These px values are tuned for the 720×1280 master. */
-    .invisible-button,
-    .glow-img{
-      position: absolute;
-      background: transparent;
-      border: 0;
-      display: none;          /* JS toggles to block */
+    /* --- Overlays (buttons + glow JPGs) anchored to stage coords --- */
+    .invisible-button, .glow-img{
+      position:absolute; background:transparent; border:0;
+      /* fade system: always display, start hidden */
+      display:block; opacity:0; visibility:hidden; transition:opacity .6s ease;
+    }
+    /* Click targets above visuals; glows under */
+    .invisible-button{ z-index:3; pointer-events:none; } /* pointer enabled when shown */
+    .glow-img{ z-index:2; pointer-events:none; width:100%; height:100%;
+      /* if your video/art is “smushed”, use fill so overlays smush identically */
+      object-fit: fill;
     }
 
-    /* Buttons above the images for clicks; glows are visual only */
-/* ---------- FIX: overlays anchored to 720×1280 stage, no stretching ---------- */
+    /* Visible state */
+    .show{ opacity:1; visibility:visible; }
+    /* Only buttons become interactive when shown */
+    .invisible-button.show{ pointer-events:auto; }
 
-/* shared */
-.invisible-button,
-.glow-img {
-  position: absolute;
-  background: transparent;
-  border: 0;
-  display: none;            /* JS turns these on */
-}
+    /* --- Exact stage coordinates (px) for 720×1280 master --- */
+    /* REQUIA sign */
+    #requiaBtn, #requiaGlow { left:27px; top:45px; width:233px; height:145px; }
+    /* SYSYNCT sign */
+    #sysynctBtn, #sysynctGlow { left:25px; top:282px; width:230px; height:94px; }
+    /* Q mug / sparkle */
+    #qBtn, #qGlow { left:103px; top:655px; width:160px; height:155px; }
 
-/* click targets above visuals */
-.invisible-button {
-  z-index: 3;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-/* glow JPGs under buttons, keep aspect ratio */
-.glow-img {
-  z-index: 2;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;      /* prevents warping */
-}
-
-/* ===== exact stage coordinates for your 720×1280 master ===== */
-/* REQUIA sign */
-#requiaBtn, #requiaGlow {
-  left: 27px;
-  top: 45px;
-  width: 233px;
-  height: 145px;
-}
-
-/* SYSYNCT sign */
-#sysynctBtn, #sysynctGlow {
-  left: 25px;
-  top: 282px;
-  width: 230px;
-  height: 94px;
-}
-
-/* Q mug / sparkle */
-#qBtn, #qGlow {
-  left: 103px;
-  top: 655px;
-  width: 160px;
-  height: 155px;
-}
-
-/* Pause touch area (optional) */
-#pauseTrigger {
-  position: absolute;
-  left: 443px;
-  top: 487px;
-  width: 143px;
-  height: 170px;
-  cursor: pointer;
-  z-index: 4;
-}
-
-
-    /* Popups unchanged */
-    .popup {
-      position: absolute;
-      top: 10%;
-      left: 10%;
-      width: 80%;
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      padding: 1em;
-      border-radius: 10px;
-      z-index: 4;
-      display: none;
-    }
-    .popup a {
-      color: #00ffff;
-      display: inline-block;
-      margin-top: 10px;
-    }
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 1.5em;
-      cursor: pointer;
-    }
-		/* Fade-in for overlays */
-	.invisible-button, .glow-img {
-  	  opacity: 0;
-  	  transition: opacity 1.0s ease;
+    /* Pause touch area (stage-relative) */
+    #pauseTrigger{
+      position:absolute; left:443px; top:487px; width:143px; height:170px; cursor:pointer; z-index:4;
     }
 
-/* When your JS sets style="display:block" these become visible + fade */
-	.invisible-button[style*="display: block"],
-	.glow-img[style*="display: block"] {
-  	  opacity: 1;
+    /* --- Popups (unchanged) --- */
+    .popup{
+      position:absolute; top:10%; left:10%; width:80%;
+      background:rgba(0,0,0,.9); color:#fff; padding:1em; border-radius:10px; z-index:4; display:none;
     }
-
+    .popup a{ color:#0ff; display:inline-block; margin-top:10px; }
+    .close{ position:absolute; top:10px; right:20px; font-size:1.5em; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -172,7 +76,7 @@
       Your browser does not support HTML5 video.
     </video>
 
-    <!-- Glow JPGs (no stretch thanks to object-fit: contain) -->
+    <!-- Glow JPGs (fill so they match any non-uniform base) -->
     <img id="requiaGlow" class="glow-img" src="requia_idle.jpg" alt="">
     <img id="sysynctGlow" class="glow-img" src="sysynct_idle.jpg" alt="">
     <img id="qGlow" class="glow-img" src="q_idle.jpg" alt="">
@@ -186,7 +90,7 @@
 
     <div id="pauseTrigger" aria-hidden="true" onclick="document.getElementById('bgVideo').pause();"></div>
 
-    <!-- Popups (unchanged) -->
+    <!-- Popups -->
     <div id="requiaPopup" class="popup">
       <div class="close" onclick="closePopup('requiaPopup')">&times;</div>
       <h2>Requia</h2>
@@ -212,8 +116,10 @@
   </div>
 
   <script>
+    const container = document.getElementById('container');
     const video = document.getElementById('bgVideo');
     const startButton = document.getElementById('startButton');
+
     const requiaBtn = document.getElementById('requiaBtn');
     const sysynctBtn = document.getElementById('sysynctBtn');
     const qBtn = document.getElementById('qBtn');
@@ -222,64 +128,65 @@
     const sysynctGlow = document.getElementById('sysynctGlow');
     const qGlow = document.getElementById('qGlow');
 
-    function scaleContainer() {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const targetWidth = 720;
-      const targetHeight = 1280;
-      const scale = Math.min(vw / targetWidth, vh / targetHeight);
-      document.getElementById('container').style.setProperty('--scale', scale);
+    /* Uniform stage scale */
+    function scaleContainer(){
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const scale = Math.min(vw/720, vh/1280);
+      container.style.setProperty('--scale', scale);
     }
-
     window.addEventListener('resize', scaleContainer);
     window.addEventListener('load', () => {
       scaleContainer();
-      video.load(); // force poster frame
+      video.load();  // show poster
       video.pause();
     });
+
+    /* Class-based show/hide for reliable fades */
+    function showOverlays(){
+      [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
+        .forEach(el => el.classList.add('show'));
+    }
+    function hideOverlays(){
+      [requiaBtn, sysynctBtn, qBtn, requiaGlow, sysynctGlow, qGlow]
+        .forEach(el => el.classList.remove('show'));
+    }
 
     startButton.addEventListener('click', () => {
       startButton.style.display = 'none';
       video.currentTime = 0;
       video.muted = false;
+
       video.play().then(() => {
-        setTimeout(() => {
-          // show buttons + glows
-          [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'block');
-          [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'block');
-        }, 5000);
+        /* show overlays after N ms — tweak this number to taste */
+        setTimeout(showOverlays, 5500);
       });
 
       video.addEventListener('timeupdate', () => {
-        if (video.currentTime >= 319) {
-          [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'none');
-        }
+        /* hide overlays near the end if desired */
+        if (video.currentTime >= 319) hideOverlays();
       });
     });
 
     video.addEventListener('ended', () => {
       startButton.textContent = 'Yes';
       startButton.style.display = 'block';
-      video.pause();
-      video.currentTime = 0;
-
-      [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'none');
-      [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'none');
+      video.pause(); video.currentTime = 0;
+      hideOverlays();
     });
 
-    function closePopup(id) {
-      document.getElementById(id).style.display = 'none';
-    }
+    /* Popups */
+    function closePopup(id){ document.getElementById(id).style.display='none'; }
+    requiaBtn.addEventListener('click', () => { document.getElementById('requiaPopup').style.display='block'; });
+    sysynctBtn.addEventListener('click', () => { document.getElementById('sysynctPopup').style.display='block'; });
+    qBtn.addEventListener('click', () => { document.getElementById('qPopup').style.display='block'; });
 
-    // simple hover swap logic (unchanged)
-    requiaBtn.addEventListener('mouseenter', () => { requiaGlow.src = 'requia_hover.jpg'; });
-    requiaBtn.addEventListener('mouseleave', () => { requiaGlow.src = 'requia_idle.jpg'; });
-
-    sysynctBtn.addEventListener('mouseenter', () => { sysynctGlow.src = 'sysynct_hover.jpg'; });
-    sysynctBtn.addEventListener('mouseleave', () => { sysynctGlow.src = 'sysynct_idle.jpg'; });
-
-    qBtn.addEventListener('mouseenter', () => { qGlow.src = 'q_hover.jpg'; });
-    qBtn.addEventListener('mouseleave', () => { qGlow.src = 'q_idle.jpg'; });
+    /* Hover glow swaps */
+    requiaBtn.addEventListener('mouseenter', () => { requiaGlow.src='requia_hover.jpg'; });
+    requiaBtn.addEventListener('mouseleave', () => { requiaGlow.src='requia_idle.jpg'; });
+    sysynctBtn.addEventListener('mouseenter', () => { sysynctGlow.src='sysynct_hover.jpg'; });
+    sysynctBtn.addEventListener('mouseleave', () => { sysynctGlow.src='sysynct_idle.jpg'; });
+    qBtn.addEventListener('mouseenter', () => { qGlow.src='q_hover.jpg'; });
+    qBtn.addEventListener('mouseleave', () => { qGlow.src='q_idle.jpg'; });
   </script>
 </body>
 </html>
