@@ -117,9 +117,9 @@
 /* Pause touch area (optional) */
 #pauseTrigger {
   position: absolute;
-  left: 532px;
-  top: 220px;
-  width: 52px;
+  left: 443px;
+  top: 487px;
+  width: 143px;
   height: 170px;
   cursor: pointer;
   z-index: 4;
@@ -151,6 +151,18 @@
       font-size: 1.5em;
       cursor: pointer;
     }
+		/* Fade-in for overlays */
+	.invisible-button, .glow-img {
+  	  opacity: 0;
+  	  transition: opacity .25s ease;
+    }
+
+/* When your JS sets style="display:block" these become visible + fade */
+	.invisible-button[style*="display: block"],
+	.glow-img[style*="display: block"] {
+  	  opacity: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -235,7 +247,7 @@
           // show buttons + glows
           [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'block');
           [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'block');
-        }, 5000);
+        }, 7000);
       });
 
       video.addEventListener('timeupdate', () => {
