@@ -154,7 +154,7 @@
 		/* Fade-in for overlays */
 	.invisible-button, .glow-img {
   	  opacity: 0;
-  	  transition: opacity .25s ease;
+  	  transition: opacity 1.0s ease;
     }
 
 /* When your JS sets style="display:block" these become visible + fade */
@@ -247,7 +247,7 @@
           // show buttons + glows
           [requiaBtn, sysynctBtn, qBtn].forEach(el => el.style.display = 'block');
           [requiaGlow, sysynctGlow, qGlow].forEach(el => el.style.display = 'block');
-        }, 7000);
+        }, 6000);
       });
 
       video.addEventListener('timeupdate', () => {
